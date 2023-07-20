@@ -22,6 +22,10 @@ export default function NewStudent() {
 		})
 	}
 
+	const handleClick = () => {
+		console.log('desde click')
+	}
+
   return (
 		<>
 			<main>
@@ -31,19 +35,17 @@ export default function NewStudent() {
 				<div className='form-container'>
 					<h2>formulario</h2>
 					<form action='' onSubmit={handleSubmit}>
-						<TextField
-							onChange={handleChange}
-							margin='normal'
-							fullWidth
-							id='outlined-basic'
-							label='Nombre y Apellido'
-							variant='outlined'
-							value={name}
-						/>
+						<label htmlFor="">nombre y apellido</label>
+						<input type="text" onChange={handleChange} />
+						
 
 						<button >Cargar Alumno</button>
 
 					</form>
+
+					<div>
+						<button onClick={handleClick}>Sincronizar</button>
+					</div>
 				</div>
 				<style jsx>{`
 					main {
@@ -70,44 +72,5 @@ export default function NewStudent() {
 }
 
 
-
-
-// const FormComponent = () => {
-// 	const { formData, setFormData, isOffline, saveOfflineData } = useFormState()
-
-// 	const handleInputChange = (event) => {
-// 		const { name, value } = event.target
-// 		setFormData({ [name]: value })
-// 	}
-
-// 	const handleSubmit = (event) => {
-// 		event.preventDefault()
-// 		// Aquí puedes implementar la lógica para enviar los datos al servidor
-// 		// Puedes usar fetch, axios, o la librería de tu elección
-
-// 		if (navigator.onLine) {
-// 			// Si hay conexión, envía los datos
-// 			sendFormDataToServer(formData)
-// 		} else {
-// 			// Si no hay conexión, guarda los datos en el almacenamiento local
-// 			saveOfflineData()
-// 		}
-// 	}
-
-// 	return (
-// 		<form onSubmit={handleSubmit}>
-// 			<input type='text' name='name' value={formData.name || ''} onChange={handleInputChange} />
-// 			<input type='email' name='email' value={formData.email || ''} onChange={handleInputChange} />
-// 			<button type='submit' disabled={isOffline}>
-// 				Enviar
-// 			</button>
-// 			{isOffline && (
-// 				<span>
-// 					Estás desconectado. Los datos se guardarán y se enviarán cuando recuperes la conexión.
-// 				</span>
-// 			)}
-// 		</form>
-// 	)
-// }
 
 

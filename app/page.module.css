@@ -2,11 +2,40 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 6rem;
   min-height: 100vh;
   color: black;
 }
 .title {
-  color: black;
+  color: #fff;
+}
+.header{
+   display: flex;
+   flex-direction: row;
+   justify-content: space-between;
+   align-items: center;
+   background-image: radial-gradient(circle at 68.22% 18.43%, #8963e9 0, #6250c5 25%, #3b3b9f 50%, #0e277a 75%, #001558 100%);
+   padding: 20px 50px;
+   width: 100%;
+   color: #fff;
 }
 
+.link {
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 8px 20px;
+  border-radius: 24px;
+  cursor: pointer;
+}
+
+.sincronizar {
+  margin-top: 20px;
+}
+
+.sincronizar button {
+  background-color: #001558;
+  color: #fff;
+  width: 100px;
+  text-align: center;
+  padding: 5px 10px;
+  border-radius: 12px;
+  border: none;
+}

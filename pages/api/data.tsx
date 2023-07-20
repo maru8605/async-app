@@ -16,13 +16,13 @@ const data = [
   },
 ];
 
-export default async function handler(res, req) {
-	try {
-		const response = await fetch('http://localhost:3000/api/data')
-		const data = await response.json()
-		res.status(200).json(data)
-	} catch (error) {
-		console.error(error)
-		res.status(500).json({ error: 'Error al obtener los datos' })
-	}
-}
+// export default async function handler(res, req) {
+// 	try {
+// 		const response = await fetch('http://localhost:3000/api/data')
+// 		const data = await response.json()
+// 		res.status(200).json(data)
+// 	} catch (error) {
+// 		console.error(error)
+// 		res.status(500).json({ error: 'Error al obtener los datos' })
+// 	}
+// }
