@@ -15,7 +15,6 @@ export default function Home() {
     // Utiliza la función asincrónica getStudent para obtener los datos
     const fetchData = async () => {
       try {
-        
         const studentsData = await getStudent()
         setStudents(studentsData)
         console.log(student[1])
