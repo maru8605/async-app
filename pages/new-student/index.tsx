@@ -1,26 +1,20 @@
 
 import Link from 'next/link';
 // import { TextField, Button} from '@mui/material';
-import {useStore} from 'zustand'
+import useDataStore from '@/features/attendance/stores';
 import { useState, useEffect } from 'react';
 import {addStudent} from '../../firebase/client'
 
 
 export default function NewStudent() {
 
-	const store = useStore(() => ({
-		data: [],
-	}),
-		
-	);
-
 	const [name, setName] = useState("");
+	const dataStore:any = useDataStore();
+
 
 	const handleChange = (event: any) => {
 		const { value } = event.target;
 		setName(value);
-		console.log(value)
-
 	}
 
 	const handleSubmit = (event: any) => {
@@ -28,11 +22,9 @@ export default function NewStudent() {
 
 		//Si no hay coneccion a internet
 		if (typeof navigator.onLine === "undefined" || !navigator.onLine) {
-
-			localStorage.setItem("alumno:", JSON.stringify(name));
-
-			console.log('localStorage.getItem:', localStorage.setItem)	
-			console.log('guardar:', JSON.stringify(name))
+			console.log('offline')
+			dataStore.addData(name)
+			localStorage.setItem('alumnos', JSON.stringify(dataStore.data))
 		} else {
 			console.log('hay internet:', window.navigator.onLine);
 
@@ -44,26 +36,34 @@ export default function NewStudent() {
 
 	}
 
-	useEffect(() => {
-		const nombre = localStorage.getItem('alumno')
-		console.log('alumno effect:', nombre)
-		if (typeof navigator.onLine === "undefined" || !navigator.onLine) {
-			const formDataFromLocalStorage = localStorage.getItem("alumno");
+  useEffect(() => {
+		// Retrieve data from Zustand store and local storage
+		if (typeof navigator.onLine === 'undefined' || !navigator.onLine) {
+			console.log('offline useEffect')
+			const formDataFromStore = dataStore.data
+			const formDataFromLocalStorage = localStorage.getItem('alumnos')
 
-			if (formDataFromLocalStorage) {
-        setName(JSON.parse(formDataFromLocalStorage));
-      }
+			if (formDataFromStore.length === 0 && formDataFromLocalStorage) {
+				dataStore.addData(JSON.parse(formDataFromLocalStorage))
+			}
 		}
 	}, [])
 	
 
 	const handleClick = () => {
-		console.log('desde click')
-
-		// obtener los datos de local
-		// enviar los datos
-		//borrar los datos 
-		//redirigir a vista alumnos 
+		console.log('hago click - offline')
+		console.log(dataStore.data)
+		// Synchronize data when there is an internet connection
+		if (navigator.onLine) {
+			console.log('handleClick Online:', dataStore.data)
+			dataStore.data.forEach((item:any) => {
+				addStudent({
+					content: item.name,
+				})
+			})
+			dataStore.clearData()
+			localStorage.removeItem('alumnos')
+		}
 	}
 
   return (
