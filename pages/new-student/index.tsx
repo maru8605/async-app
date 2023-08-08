@@ -2,13 +2,14 @@
 import Link from 'next/link';
 // import { TextField, Button} from '@mui/material';
 import useDataStore from '@/features/attendance/stores';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react'
 import {addStudent} from '../../firebase/client'
 
 
 export default function NewStudent() {
 
 	const [name, setName] = useState("");
+	const [isSyncButtonEnabled, setIsSyncButtonEnabled] = useState(false)
 	const dataStore:any = useDataStore();
 
 
@@ -35,8 +36,15 @@ export default function NewStudent() {
 		}
 
 	}
+	const hasData = useMemo(() => {
+		return (
+			dataStore.data.length > 0 ||
+			(typeof localStorage !== 'undefined' && localStorage.getItem('alumnos'))
+		)
+	}, [dataStore.data])
 
-  useEffect(() => {
+	useEffect(() => {
+		
 		// Retrieve data from Zustand store and local storage
 		if (typeof navigator.onLine === 'undefined' || !navigator.onLine) {
 			console.log('offline useEffect')
@@ -47,7 +55,8 @@ export default function NewStudent() {
 				dataStore.addData(JSON.parse(formDataFromLocalStorage))
 			}
 		}
-	}, [])
+		setIsSyncButtonEnabled(hasData)
+	}, [hasData])
 	
 
 	const handleClick = () => {
@@ -75,16 +84,20 @@ export default function NewStudent() {
 				<div className='form-container'>
 					<h2>formulario</h2>
 					<form action='' onSubmit={handleSubmit} className='form'>
-						<label htmlFor="">nombre y apellido</label>
-						<input className='input' type="text" onChange={handleChange} />
-						
+						<label htmlFor=''>nombre y apellido</label>
+						<input className='input' type='text' onChange={handleChange} />
 
 						<button className='form-button'>Cargar Alumno</button>
-
 					</form>
 
 					<div className='sincronizar'>
-						<button onClick={handleClick}>Sincronizar</button>
+						<button
+							onClick={handleClick}
+							disabled={!isSyncButtonEnabled}
+							className={`synchronize-button ${isSyncButtonEnabled ? 'enabled' : 'disabled'}`}
+						>
+							{isSyncButtonEnabled ? 'Sincronizar Datos' : 'No hay datos para sincronizar'}
+						</button>
 					</div>
 				</div>
 				<style jsx>{`
@@ -104,22 +117,42 @@ export default function NewStudent() {
 					}
 					.form-container {
 						margin: 10px;
-						display:flex;
+						display: flex;
 						flex-direction: column;
-						width: 50%
+						width: 50%;
 					}
-					.form{
+					.form {
 						display: flex;
 						flex-direction: column;
 					}
-					.form-button{
-						margin-top: 20px
+					.form-button {
+						margin-top: 20px;
 					}
-					.input{
-						margin-top: 16px
+					.input {
+						margin-top: 16px;
 					}
-					.sincronizar{
-						margin-top: 50px
+					.sincronizar {
+						margin-top: 50px;
+					}
+					.synchronize-button {
+						// Estilos generales del botón
+						margin-top: 50px;
+						padding: 10px 20px;
+						border: none;
+						cursor: pointer;
+						font-weight: bold;
+						text-transform: uppercase;
+					}
+
+					.synchronize-button.enabled {
+						background-color: green; // Cambia el color cuando está habilitado
+						color: white;
+					}
+
+					.synchronize-button.disabled {
+						background-color: lightgray; // Cambia el color cuando está deshabilitado
+						color: gray;
+						cursor: not-allowed;
 					}
 				`}</style>
 			</main>
